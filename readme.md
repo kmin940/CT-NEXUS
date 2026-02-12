@@ -76,9 +76,8 @@ python src/feature_extraction/extract_feat_LP.py \
 - Non-ROI: Center cropped/padded to 320×320×320
 - ROI: Center cropped to 160×160×160 based on mask, then padded to 160×160×160
 
-Preprocessing:
+### Preprocessing
 
-Pretraining CT-NEXUS:
 ```
 export nnssl_raw="/path/to/nnssl_raw"
 export nnssl_preprocessed="/path/to/nnssl_preprocessed"
@@ -87,6 +86,7 @@ export nnssl_results="/path/to/nnssl_results"
 nnssl_plan_and_preprocess -d 001 -c onemmiso -np 60
 ```
 
+### Pretraining CT-NEXUS:
 - Stage 1:
 ```
 nnUNet_n_proc_DA=16 nnssl_train 001 onemmiso -tr HuberMAETrainer_BS24 -p nnsslPlans -num_gpus 4

@@ -1,3 +1,6 @@
+import warnings
+warnings.filterwarnings("ignore")
+
 import multiprocessing as mp
 mp.set_start_method("spawn", force=True)
 import os
@@ -34,6 +37,7 @@ from typing import Type, Protocol
 from numbers import Number
 import torch.distributed as dist
 from dynamic_network_architectures.architectures.unet import ResidualEncoderUNet
+from tqdm import tqdm
 
 # Set device
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -490,7 +494,7 @@ if __name__ == "__main__":
     # Extract embeddings and save immediately after each batch
     processed_count = 0
     with torch.no_grad():
-        for batch_idx, batch in enumerate(dataloader):
+        for batch_idx, batch in enumerate(tqdm(dataloader, desc="Extracting features")):
             # Handle both dict and list outputs from DataLoader
             if isinstance(batch, dict):
                 images = batch["image"]

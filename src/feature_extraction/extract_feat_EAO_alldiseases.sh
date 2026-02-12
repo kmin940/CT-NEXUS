@@ -7,7 +7,7 @@ export CUDA_VISIBLE_DEVICES=1
 # OUTPUT_DIR="${OUTPUT_DIR:-/workspace/outputs}"
 # MASKS_DIR="${MASKS_DIR:-}"  # Optional masks directory
 INPUT_DIR="${INPUT_DIR:-/home/jma/Documents/cryoSumin/CT_FM/data/raw_data_classify/amos-clf-tr-val/images}"
-OUTPUT_DIR="${OUTPUT_DIR:-/home/jma/Documents/cryoSumin/CT_FM/data/embeddings/features_public_MultiStage2}"
+OUTPUT_DIR="${OUTPUT_DIR:-/home/jma/Documents/cryoSumin/CT_FM/data/embeddings/features_EAO_public_MultiStage2}"
 
 disease_list=(
   splenomegaly
@@ -32,6 +32,7 @@ non_roi_disease_list=(
   ascites
   lymphadenopathy
 )
+
 for disease in "${disease_list[@]}"; do
     if [[ " ${non_roi_disease_list[@]} " =~ " ${disease} " ]]; then
       echo "Running feature extraction for non-roi ${disease} ..."
@@ -42,7 +43,7 @@ for disease in "${disease_list[@]}"; do
     fi
 
     # Build command with optional masks_path
-    CMD="python3 extract_feat_LP.py -i \"$INPUT_DIR\" -o \"$OUTPUT_DIR/${disease}\""
+    CMD="python3 extract_feat_EAO.py -i \"$INPUT_DIR\" -o \"$OUTPUT_DIR/${disease}\""
 
     # Add masks_path argument if MASKS_DIR is set and not empty
     if [ -n "$MASKS_DIR" ]; then

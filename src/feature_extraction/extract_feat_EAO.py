@@ -1,3 +1,6 @@
+import warnings
+warnings.filterwarnings("ignore")
+
 import multiprocessing as mp
 mp.set_start_method("spawn", force=True)
 import os
@@ -21,6 +24,7 @@ import json
 import argparse
 import h5py
 from transforms.monai_transforms import MaskCenterCropd
+from tqdm import tqdm
 
 # Import nnssl components (these imports trigger paths.py to read the environment variables)
 from nnssl.experiment_planning.experiment_planners.plan import Plan
@@ -504,7 +508,7 @@ if __name__ == "__main__":
     # Extract embeddings and save immediately after each batch
     processed_count = 0
     with torch.no_grad():
-        for batch_idx, batch in enumerate(dataloader):
+        for batch_idx, batch in enumerate(tqdm(dataloader, desc="Extracting features")):
             # Handle both dict and list outputs from DataLoader
             if isinstance(batch, dict):
                 images = batch["image"]

@@ -1,0 +1,78 @@
+{
+    "architecture_plans": {
+        "arch_class_name": "ResEncL",
+        "arch_kwargs": null,
+        "arch_kwargs_requiring_import": null
+    },
+    "key_to_encoder": "encoder.stages",
+    "key_to_lpe": null,
+    "key_to_stem": "encoder.stem",
+    "keys_to_in_proj": [
+        "encoder.stem.convs.0.conv",
+        "encoder.stem.convs.0.all_modules.0"
+    ],
+    "pretrain_num_input_channels": 1,
+    "pretrain_plan": {
+        "configurations": {
+            "onemmiso": {
+                "data_identifier": "nnsslPlans_onemmiso",
+                "normalization_schemes": [
+                    "ZScoreNormalization"
+                ],
+                "patch_size": [
+                    160,
+                    160,
+                    160
+                ],
+                "preprocessor_name": "DefaultPreprocessor",
+                "resampling_fn_data": "resample_data_or_seg_to_shape",
+                "resampling_fn_data_kwargs": {
+                    "force_separate_z": null,
+                    "is_seg": false,
+                    "order": 3,
+                    "order_z": 0
+                },
+                "resampling_fn_mask": "resample_data_or_seg_to_shape",
+                "resampling_fn_mask_kwargs": {
+                    "force_separate_z": null,
+                    "is_seg": true,
+                    "order": 1,
+                    "order_z": 0
+                },
+                "spacing": [
+                    1,
+                    1,
+                    1
+                ],
+                "spacing_style": "onemmiso",
+                "use_mask_for_norm": [
+                    false
+                ]
+            }
+        },
+        "dataset_name": "Dataset001_MerlinTrain",
+        "experiment_planner_used": "ExperimentPlanner",
+        "image_reader_writer": "SimpleITKIO",
+        "original_median_spacing_after_transp": [
+            1.25,
+            0.755859375,
+            0.755859375
+        ],
+        "plans_name": "nnsslPlans",
+        "transpose_backward": [
+            0,
+            1,
+            2
+        ],
+        "transpose_forward": [
+            0,
+            1,
+            2
+        ]
+    },
+    "recommended_downstream_patchsize": [
+        160,
+        160,
+        160
+    ]
+}

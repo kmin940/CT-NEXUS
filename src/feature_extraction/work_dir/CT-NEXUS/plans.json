@@ -1,0 +1,58 @@
+{
+    "dataset_name": "Dataset001_MerlinTrain",
+    "plans_name": "nnsslPlans",
+    "original_median_spacing_after_transp": [
+        1.25,
+        0.755859375,
+        0.755859375
+    ],
+    "image_reader_writer": "SimpleITKIO",
+    "transpose_forward": [
+        0,
+        1,
+        2
+    ],
+    "transpose_backward": [
+        0,
+        1,
+        2
+    ],
+    "configurations": {
+        "onemmiso": {
+            "data_identifier": "nnsslPlans_onemmiso",
+            "preprocessor_name": "DefaultPreprocessor",
+            "spacing_style": "onemmiso",
+            "normalization_schemes": [
+                "ZScoreNormalization"
+            ],
+            "use_mask_for_norm": [
+                false
+            ],
+            "resampling_fn_data": "resample_data_or_seg_to_shape",
+            "resampling_fn_data_kwargs": {
+                "is_seg": false,
+                "order": 3,
+                "order_z": 0,
+                "force_separate_z": null
+            },
+            "resampling_fn_mask": "resample_data_or_seg_to_shape",
+            "resampling_fn_mask_kwargs": {
+                "is_seg": true,
+                "order": 1,
+                "order_z": 0,
+                "force_separate_z": null
+            },
+            "spacing": [
+                1,
+                1,
+                1
+            ],
+            "patch_size": [
+                160,
+                160,
+                160
+            ]
+        }
+    },
+    "experiment_planner_used": "ExperimentPlanner"
+}

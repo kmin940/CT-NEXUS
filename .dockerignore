@@ -1,0 +1,65 @@
+# Git
+.git
+.gitignore
+.github
+
+# Documentation
+*.md
+!README.md
+!readme.md
+documentation
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+*.pyd
+.Python
+*.so
+*.egg
+*.egg-info
+dist
+build
+.pytest_cache
+.coverage
+.venv
+.env
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Data files (large)
+*.nii.gz
+*.nii
+*.h5
+*.hdf5
+*.npz
+*.npy
+*.ckpt
+*.tar.gz
+
+# CSV and JSON data
+*.csv
+!src/linear_probing/test_demo/**/*.csv
+
+# Test and demo data
+**/test_demo/imgs
+**/test_demo/outputs
+test_demo/**/*
+work_dir
+prompts_dev
+
+# Checkpoints and outputs
+checkpoints
+embeddings
+raw_data*
+outputs
+results
+
+# Misc
+.ipynb_checkpoints
+*.log

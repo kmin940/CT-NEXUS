@@ -1,28 +1,13 @@
 # Install
 
-### pip
-```bash
-conda create -n ctnexus python=3.12
-conda activate ctnexus
-pip install -e .
-```
-
-### uv (Recommended)
+### uv
 [uv](https://docs.astral.sh/uv/) is a fast Python package installer and resolver.
 
 ```bash
 # Install uv if you haven't already
 curl -LsSf https://astral.sh/uv/install.sh | sh
-
-# Create a virtual environment with Python 3.12
 uv venv --python 3.12
-
-# Activate the virtual environment
-source .venv/bin/activate  # On Linux/macOS
-# or
-.venv\Scripts\activate  # On Windows
-
-# Install the package in editable mode
+source .venv/bin/activate  
 uv pip install -e .
 ```
 
@@ -35,68 +20,84 @@ docker save ctnexus:latest | gzip > ctnexus.tar.gz
 ```
 
 ### Run Container
-```bash
-docker run --rm --gpus all -m 8G \
-    -v ./inputs:/workspace/inputs \
-    -v ./outputs:/workspace/outputs \
-    ctnexus:latest /bin/bash -c "sh extract_feat.sh"
+Place [test_demo](https://huggingface.co/datasets/kmin06/CVPR26-3DCTFMCompetition/tree/main/AMOS-clf-tr-val/test_demo) in the current directory.
+
+```
+docker load -i ctnexus.tar.gz
+mkdir test_demo_outputs
+
+## for Non-ROI disease
+docker container run --gpus "device=0" -m 32G --name ctnexus --rm -v $PWD/test_demo/images/:/workspace/inputs/ -v $PWD/test_demo_outputs/:/workspace/outputs/ ctnexus:latest /bin/bash -c "sh extract_feat_LP.sh"
+
+## for ROI disease
+docker container run --gpus "device=0" -m 32G --name ctnexus --rm -e MASKS_DIR=/workspace/inputs/fg_masks/adrenal_hyperplasia -v $PWD/test_demo/:/workspace/inputs/ -v $PWD/test_demo_outputs/:/workspace/outputs/ ctnexus:latest /bin/bash -c "sh extract_feat_LP.sh"
 ``` 
 
 ## Usage
 
-Pre-process and format the data as you would for OpenMind as usual. Train the models as below.
+### Feature Extraction
 
+Extract features from CT images using pretrained CT-NEXUS model:
 
+**Basic usage (Non-ROI disease):**
 ```bash
-# ResEnc-L
-nnssl_train 745 onemmiso -tr AlignedMAEFTTrainer -p nnsslPlans -num_gpus 1 -pretrained_weights ${nnssl_results}/Dataset745_OpenMind/MAETrainer/fold_all/checkpoint_final.pth || true
-
-#Primus-M
-nnssl_train 745 onemmiso -tr AlignedMAEFTLR3EvaTrainer -p nnsslPlans -num_gpus 1 -pretrained_weights ${nnssl_results}/Dataset745_OpenMind/MAETrainer/fold_all/checkpoint_final.pth || true
+python src/feature_extraction/extract_feat_LP.py \
+  -i /path/to/input/images \
+  -o /path/to/output/features \
+  --checkpoint ./work_dir/CT-NEXUS/fold_all/checkpoint_final.pth
 ```
 
-----
-
-## 📦 Pretrained Weights
-
-Pretrained weights will be released soon on **Zenodo**. Stay tuned!
-
----
-
-## 📖 Citation
-
-Citation to our challenge report and paper.
-
-Please also cite the original work this repo builds on:
-
-```bibtex
-@article{vaishConsistentViewAlignment2025,
-  title = {Consistent View Alignment Improves Foundation Models for {{3D}} Medical Image Segmentation},
-  author = {Vaish, Puru and Meister, Felix and Heimann, Tobias and Brune, Christoph and Wolterink, Jelmer M.},
-  year = {2025},
-  month = sep,
-  number = {arXiv:2509.13846},
-  eprint = {2509.13846},
-  primaryclass = {cs},
-  publisher = {arXiv},
-  doi = {10.48550/arXiv.2509.13846},
-  url = {http://arxiv.org/abs/2509.13846},
-  urldate = {2025-09-19},
-  abstract = {Many recent approaches in representation learning implicitly assume that uncorrelated views of a data point are sufficient to learn meaningful representations for various downstream tasks. In this work, we challenge this assumption and demonstrate that meaningful structure in the latent space does not emerge naturally. Instead, it must be explicitly induced. We propose a method that aligns representations from different views of the data to align complementary information without inducing false positives. Our experiments show that our proposed self-supervised learning method, Consistent View Alignment, improves performance for downstream tasks, highlighting the critical role of structured view alignment in learning effective representations. Our method achieved first and second place in the MICCAI 2025 SSL3D challenge when using a Primus vision transformer and ResEnc convolutional neural network, respectively. The code and pretrained model weights are released at https://github.com/Tenbatsu24/LatentCampus.},
-  archiveprefix = {arXiv},
-  langid = {english},
-  keywords = {Computer Science - Computer Vision and Pattern Recognition,Computer Science - Machine Learning},
-}
+**ROI-based disease (with masks):**
+```bash
+python src/feature_extraction/extract_feat_LP.py \
+  -i /path/to/input/images \
+  -o /path/to/output/features \
+  --masks_path /path/to/foreground/masks \
+  --checkpoint ./work_dir/CT-NEXUS/fold_all/checkpoint_final.pth
 ```
 
----
+**Parameters:**
+- `-i, --input`: Input directory containing `.nii.gz` CT images (required)
+- `-o, --output`: Output directory for extracted features (`.h5` files) (required)
+- `--masks_path`: Path to foreground masks for ROI-based diseases (optional)
+- `--checkpoint`: Path to pretrained model checkpoint (default: `./work_dir/CT-NEXUS/fold_all/checkpoint_final.pth`)
+- `--num_classes`: Number of classification classes (default: 2)
+- `--batch_size`: Batch size for inference (default: 1)
+- `--dump_dir`: Directory to save debug images and masks (optional)
+- `--num_workers`: Number of workers for data loading (default: 0)
 
-## ⚖ License
+**Output:**
+- Features are saved as `.h5` files in the output directory
+- Each image produces one `.h5` file containing the `y_hat` dataset with extracted features
 
-This repository is released under the [Creative Commons Attribution-NonCommercial 4.0 International Public License](./LICENSE.md).
+**Preprocessing pipeline:**
+- Images are normalized using Z-score normalization
+- Resampled to isotropic 1mm spacing
+- Non-ROI: Center cropped/padded to 320×320×320
+- ROI: Center cropped to 160×160×160 based on mask, then padded to 160×160×160
 
-### Requirements
+Preprocessing:
 
-All requirements are the same as in the original repository, including dependencies for PyTorch, einops, thop, and other libraries.
+Pretraining CT-NEXUS:
+```
+export nnssl_raw="/path/to/nnssl_raw"
+export nnssl_preprocessed="/path/to/nnssl_preprocessed"
+export nnssl_results="/path/to/nnssl_results"
+
+nnssl_plan_and_preprocess -d 001 -c onemmiso -np 60
+```
+
+- Stage 1:
+```
+nnUNet_n_proc_DA=16 nnssl_train 001 onemmiso -tr HuberMAETrainer_BS24 -p nnsslPlans -num_gpus 4
+```
+
+- Stage 2:
+```
+nnUNet_n_proc_DA=16 nnssl_train 001 onemmiso -tr AlignedHuberFTTrainer_MaxPool_BS20 -p nnsslPlans -num_gpus 4
+```
 
 
+## Pretrained Weights and Docker
+
+Pretrained weights and Docker image are available [here](https://drive.google.com/drive/folders/1VR0u8gvpuYSXSbZEwoq1z169SWztWH0a?usp=drive_link)

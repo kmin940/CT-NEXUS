@@ -101,3 +101,5 @@ nnUNet_n_proc_DA=16 nnssl_train 001 onemmiso -tr AlignedHuberFTTrainer_MaxPool_B
 ## Pretrained Weights and Docker
 
 Pretrained weights and Docker image are available [here](https://drive.google.com/drive/folders/1VR0u8gvpuYSXSbZEwoq1z169SWztWH0a?usp=drive_link)
+
+To build the docker, please put the [checkpoint folder](https://drive.google.com/drive/folders/1dRWLeqUM5EENNXmM2XMOOG5KD3hP92NX) under `/src/feature_extraction/work_dir`

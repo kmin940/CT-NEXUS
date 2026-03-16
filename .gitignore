@@ -4,7 +4,7 @@ __pycache__/
 *$py.class
 ./src/feature_extraction/extract_feat_alldiseases.sh
 ./src/feature_extraction/extract_feat_EAO_alldiseases.sh
-
+./src/feature_extraction/work_dir/CT-NEXUS
 
 # env
 .venv/

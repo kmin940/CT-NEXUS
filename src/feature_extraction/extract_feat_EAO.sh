@@ -2,9 +2,9 @@
 set -e
 
 # Default paths for Docker environment
-# INPUT_DIR="${INPUT_DIR:-/workspace/inputs}"
-# OUTPUT_DIR="${OUTPUT_DIR:-/workspace/outputs}"
-# MASKS_DIR="${MASKS_DIR:-}"  # Optional masks directory
+INPUT_DIR="${INPUT_DIR:-/workspace/inputs}"
+OUTPUT_DIR="${OUTPUT_DIR:-/workspace/outputs}"
+MASKS_DIR="${MASKS_DIR:-}"  # Optional masks directory
 NUM_CLASSES="${NUM_CLASSES:-}"  # Default to 2 classes if not set
 
 # Build command with optional masks_path

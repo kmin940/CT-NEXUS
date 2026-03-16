@@ -1,13 +1,10 @@
 #!/bin/bash
 set -e
 
-export CUDA_VISIBLE_DEVICES=1
-# Default paths for Docker environment
-# INPUT_DIR="${INPUT_DIR:-/workspace/inputs}"
-# OUTPUT_DIR="${OUTPUT_DIR:-/workspace/outputs}"
-# MASKS_DIR="${MASKS_DIR:-}"  # Optional masks directory
-INPUT_DIR="${INPUT_DIR:-/home/jma/Documents/cryoSumin/CT_FM/data/raw_data_classify/amos-clf-tr-val/images}"
-OUTPUT_DIR="${OUTPUT_DIR:-/home/jma/Documents/cryoSumin/CT_FM/data/embeddings/features_EAO_public_MultiStage2}"
+export CUDA_VISIBLE_DEVICES=2
+
+INPUT_DIR="${INPUT_DIR:-/path/to/AMOS-clf-tr-val/images}"
+OUTPUT_DIR="${OUTPUT_DIR:-/path/to/features_EAO_MultiStage}"
 
 disease_list=(
   splenomegaly
@@ -32,7 +29,6 @@ non_roi_disease_list=(
   ascites
   lymphadenopathy
 )
-
 for disease in "${disease_list[@]}"; do
     if [[ " ${non_roi_disease_list[@]} " =~ " ${disease} " ]]; then
       echo "Running feature extraction for non-roi ${disease} ..."

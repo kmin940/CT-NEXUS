@@ -1,10 +1,8 @@
 # Install
 
-### uv
-[uv](https://docs.astral.sh/uv/) is a fast Python package installer and resolver.
-
+### Install with uv!
 ```bash
-# Install uv if you haven't already
+# install uv first
 curl -LsSf https://astral.sh/uv/install.sh | sh
 uv venv --python 3.12
 source .venv/bin/activate  

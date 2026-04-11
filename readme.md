@@ -10,8 +10,9 @@ uv pip install -e .
 ```
 
 ## Docker Image Building
+Please put the [checkpoint folder](https://drive.google.com/drive/folders/1dRWLeqUM5EENNXmM2XMOOG5KD3hP92NX) under `/src/feature_extraction/work_dir`
 ```bash
-# From CT-NEXUS root
+# Docker for LP and EAO works the same. Only feature extraction command, either extract_feat_LP.sh or extract_feat_EAO.sh differs
 cd CT-NEXUS
 docker build -f Dockerfile -t ctnexus .
 docker save ctnexus:latest | gzip > ctnexus.tar.gz
@@ -59,10 +60,8 @@ python src/feature_extraction/extract_feat_LP.py \
 - `-o, --output`: Output directory for extracted features (`.h5` files) (required)
 - `--masks_path`: Path to foreground masks for ROI-based diseases (optional)
 - `--checkpoint`: Path to pretrained model checkpoint (default: `./work_dir/CT-NEXUS/fold_all/checkpoint_final.pth`)
-- `--num_classes`: Number of classification classes (default: 2)
 - `--batch_size`: Batch size for inference (default: 1)
 - `--dump_dir`: Directory to save debug images and masks (optional)
-- `--num_workers`: Number of workers for data loading (default: 0)
 
 **Output:**
 - Features are saved as `.h5` files in the output directory
@@ -99,5 +98,3 @@ nnUNet_n_proc_DA=16 nnssl_train 001 onemmiso -tr AlignedHuberFTTrainer_MaxPool_B
 ## Pretrained Weights and Docker
 
 Pretrained weights and Docker image are available [here](https://drive.google.com/drive/folders/1VR0u8gvpuYSXSbZEwoq1z169SWztWH0a?usp=drive_link)
-
-To build the docker, please put the [checkpoint folder](https://drive.google.com/drive/folders/1dRWLeqUM5EENNXmM2XMOOG5KD3hP92NX) under `/src/feature_extraction/work_dir`

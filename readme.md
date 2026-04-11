@@ -9,7 +9,7 @@ source .venv/bin/activate
 uv pip install -e .
 ```
 
-## Docker Image Building
+### Docker Image Building
 Please put the [checkpoint folder](https://drive.google.com/drive/folders/1dRWLeqUM5EENNXmM2XMOOG5KD3hP92NX) under `/src/feature_extraction/work_dir`
 ```bash
 # Docker for LP and EAO works the same. Only feature extraction command, either extract_feat_LP.sh or extract_feat_EAO.sh differs
